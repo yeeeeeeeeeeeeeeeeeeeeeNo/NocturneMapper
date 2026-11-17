@@ -44,7 +44,7 @@ uint32_t ServiceManager::ReadPeTimestamp(const std::wstring& driverDiskPath) con
 
 bool ServiceManager::RegisterAndLoad(const std::wstring& driverDiskPath, const std::wstring& serviceName) {
     if (!EnablePrivilege(SE_LOAD_DRIVER_PRIVILEGE)) {
-        std::wcerr << L"[-] Failed to enable SeLoadDriverPrivilege (Run as Administrator)\n";
+        std::wcerr << L"Failed to enable SeLoadDriverPrivilege (Run as Administrator)\n";
         return false;
     }
 
@@ -72,7 +72,7 @@ bool ServiceManager::RegisterAndLoad(const std::wstring& driverDiskPath, const s
         nullptr
     );
     if (regStatus != ERROR_SUCCESS) {
-        std::wcerr << L"[-] RegCreateKeyExW failed: " << regStatus << L"\n";
+        std::wcerr << L"RegCreateKeyExW failed: " << regStatus << L"\n";
         return false;
     }
 
@@ -94,7 +94,7 @@ bool ServiceManager::RegisterAndLoad(const std::wstring& driverDiskPath, const s
 
     NTSTATUS status = NtLoadDriver(&uService);
     if (!NT_SUCCESS(status) && status != STATUS_IMAGE_ALREADY_LOADED && status != STATUS_OBJECT_NAME_COLLISION) {
-        std::wcerr << L"[-] NtLoadDriver failed with NTSTATUS: 0x" << std::hex << status << std::dec << L"\n";
+        std::wcerr << L"NtLoadDriver failed with NTSTATUS: 0x" << std::hex << status << std::dec << L"\n";
         UnloadAndRemove();
         return false;
     }

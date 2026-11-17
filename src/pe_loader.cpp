@@ -204,7 +204,7 @@ void PeLoader::ScrubDiscardableAndHeaders(uint8_t* localImageBase, uint64_t remo
 bool PeLoader::MapDriver(const std::vector<uint8_t>& rawPeBytes, uint64_t param1, uint64_t param2, MappedImageInfo& outInfo) {
     IMAGE_NT_HEADERS64* ntHeaders = nullptr;
     if (!ValidatePe64(rawPeBytes, ntHeaders)) {
-        std::cerr << "[-] Invalid x64 PE image\n";
+        std::cerr << "Invalid x64 PE image\n";
         return false;
     }
 
@@ -225,7 +225,7 @@ bool PeLoader::MapDriver(const std::vector<uint8_t>& rawPeBytes, uint64_t param1
     bool usedIndep = false;
     uint64_t kernelBase = AllocateKernelMemory(imageSize, usedIndep);
     if (!kernelBase) {
-        std::cerr << "[-] Failed to allocate kernel memory for payload\n";
+        std::cerr << "Failed to allocate kernel memory for payload\n";
         return false;
     }
 
@@ -238,7 +238,7 @@ bool PeLoader::MapDriver(const std::vector<uint8_t>& rawPeBytes, uint64_t param1
     InitializeSecurityCookie(localImage.data(), kernelBase, stagedNt);
 
     if (!m_io.WriteKernelVirtual(kernelBase, localImage.data(), imageSize)) {
-        std::cerr << "[-] Failed to project mapped sections into kernel space\n";
+        std::cerr << "Failed to project mapped sections into kernel space\n";
         FreeKernelMemory(kernelBase, imageSize, usedIndep);
         return false;
     }
@@ -247,7 +247,7 @@ bool PeLoader::MapDriver(const std::vector<uint8_t>& rawPeBytes, uint64_t param1
     NTSTATUS status = 0;
     if (stagedNt->OptionalHeader.AddressOfEntryPoint != 0) {
         if (!m_io.CallKernelFunction(&status, entryPointVa, param1 ? param1 : kernelBase, param2 ? param2 : static_cast<uint64_t>(imageSize))) {
-            std::cerr << "[-] Failed to invoke mapped DriverEntry\n";
+            std::cerr << "Failed to invoke mapped DriverEntry\n";
             FreeKernelMemory(kernelBase, imageSize, usedIndep);
             return false;
         }
