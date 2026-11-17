@@ -1,0 +1,7 @@
+# Ignore intermediate MSVC object files only; keep bin/ (carrier drivers + compiled mapper)
+obj/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
